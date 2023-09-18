@@ -2,6 +2,10 @@ import { Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import * as BlogApi from "@/network/api/blog";
+import FormInputField from "@/components/form/FormInputField";
+import MarkDownEditor from "@/components/form/MarkdownEditor";
+import { generateSlug } from "@/utils/utils";
+import LoadingButton from "@/components/LoadingButton";
 
 interface CreatePostFormData {
   slug: string;
@@ -11,7 +15,14 @@ interface CreatePostFormData {
 }
 
 export default function CreateBlogPostPage() {
-  const { register, handleSubmit } = useForm<CreatePostFormData>();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    getValues,
+    formState: { errors, isSubmitting },
+  } = useForm<CreatePostFormData>();
 
   async function onSubmit(input: CreatePostFormData) {
     try {
@@ -22,35 +33,49 @@ export default function CreateBlogPostPage() {
     }
   }
 
+  function generateSlugFromTitle() {
+    if (getValues("slug") || !getValues("title")) return;
+    const slug = generateSlug(getValues("title"));
+    setValue("slug", slug, { shouldValidate: true });
+  }
+
   return (
     <div>
       <h1>Create a post</h1>
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Form.Group className="mb-3" controlId="title-input">
-          <Form.Label>Post title</Form.Label>
-          <Form.Control {...register("title")} placeholder="Post title" />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="slug-input">
-          <Form.Label>Post slug</Form.Label>
-          <Form.Control {...register("slug")} placeholder="Post slug" />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="summary-input">
-          <Form.Label>Post summary</Form.Label>
-          <Form.Control
-            {...register("summary")}
-            placeholder="Post summary"
-            as="textarea"
-          />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="body-input">
-          <Form.Label>Post body</Form.Label>
-          <Form.Control
-            {...register("body")}
-            placeholder="Post body"
-            as="textarea"
-          />
-        </Form.Group>
-        <Button type="submit">Create post</Button>
+        <FormInputField
+          label="Post title"
+          register={register("title", { required: "Required" })}
+          placeholder="Post title"
+          maxLength={100}
+          error={errors.title}
+          onBlur={generateSlugFromTitle}
+        />
+        <FormInputField
+          label="Post slug"
+          register={register("slug", { required: "Required" })}
+          placeholder="Post slug"
+          maxLength={100}
+          error={errors.slug}
+        />
+        <FormInputField
+          label="Post summary"
+          register={register("summary", { required: "Required" })}
+          placeholder="Post summary"
+          maxLength={300}
+          as="textarea"
+          error={errors.summary}
+        />
+        <MarkDownEditor
+          label="Post body"
+          register={register("body", { required: "Required" })}
+          error={errors.body}
+          setValue={setValue}
+          watch={watch}
+        />
+        <LoadingButton type="submit" isLoading={isSubmitting}>
+          Create post
+        </LoadingButton>
       </Form>
     </div>
   );
