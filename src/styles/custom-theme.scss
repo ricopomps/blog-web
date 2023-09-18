@@ -35,3 +35,10 @@ $input-placeholder-color: rgba($body-color, 0.65);
 $enable-negative-margins: true;
 
 @import "~bootstrap/scss/bootstrap";
+
+@import "~react-toastify/scss/_variables";
+
+:root {
+  --toastify-icon-color-success: #{$primary};
+  --toastify-icon-color-error: #{$danger};
+}

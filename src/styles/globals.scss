@@ -37,6 +37,6 @@ a {
   color: $danger;
 }
 
-.Toastify__toast--error .Toastify__icon {
-  color: $danger;
+.Toastify__toast--error .Toastify__progress-bar {
+  background-color: $danger;
 }
