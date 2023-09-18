@@ -6,12 +6,19 @@ interface CreateBlogPostValues {
   title: string;
   summary: string;
   body: string;
+  featuredImage: File;
 }
 
 const baseURL = "/posts";
 
 export async function createBlogPost(input: CreateBlogPostValues) {
-  const response = await api.post<BlogPost>(baseURL, input);
+  const formData = new FormData();
+
+  Object.entries(input).forEach(([key, value]) => {
+    formData.append(key, value);
+  });
+
+  const response = await api.post<BlogPost>(baseURL, formData);
   return response.data;
 }
 

@@ -11,6 +11,7 @@ interface CreatePostFormData {
   slug: string;
   title: string;
   summary: string;
+  featuredImage: FileList;
   body: string;
 }
 
@@ -24,9 +25,21 @@ export default function CreateBlogPostPage() {
     formState: { errors, isSubmitting },
   } = useForm<CreatePostFormData>();
 
-  async function onSubmit(input: CreatePostFormData) {
+  async function onSubmit({
+    title,
+    slug,
+    summary,
+    featuredImage,
+    body,
+  }: CreatePostFormData) {
     try {
-      await BlogApi.createBlogPost(input);
+      await BlogApi.createBlogPost({
+        title,
+        slug,
+        summary,
+        featuredImage: featuredImage[0],
+        body,
+      });
       toast.success("Blog created successfully");
     } catch (error: any) {
       toast.error(error?.response?.data?.error ?? error?.message);
@@ -65,6 +78,13 @@ export default function CreateBlogPostPage() {
           maxLength={300}
           as="textarea"
           error={errors.summary}
+        />
+        <FormInputField
+          label="Post image"
+          register={register("featuredImage", { required: "Required" })}
+          type="file"
+          accept="image/png,image/jpeg"
+          error={errors.featuredImage}
         />
         <MarkDownEditor
           label="Post body"
