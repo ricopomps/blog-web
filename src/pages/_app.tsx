@@ -1,9 +1,11 @@
+import "react-toastify/dist/ReactToastify.css";
 import "@/styles/globals.scss";
 import { Raleway } from "next/font/google";
 import Head from "next/head";
 import type { AppProps } from "next/app";
 import { Container, SSRProvider } from "react-bootstrap";
 import styles from "@/styles/App.module.css";
+import { ToastContainer } from "react-toastify";
 
 const raleway = Raleway({ weight: "300", subsets: ["latin"] });
 
@@ -26,6 +28,7 @@ export default function App({ Component, pageProps }: AppProps) {
             <Container className={styles.pageContainer}>
               <Component {...pageProps} />
             </Container>
+            <ToastContainer />
           </main>
         </div>
       </SSRProvider>
