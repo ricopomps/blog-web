@@ -1,5 +1,6 @@
 import { BlogPost } from "@/models/blogPost";
 import { formatDate } from "@/utils/utils";
+import Image from "next/image";
 import Link from "next/link";
 import { Card } from "react-bootstrap";
 
@@ -8,7 +9,7 @@ interface BlogPostEntryProps {
   className?: string;
 }
 export default function BlogPostEntry({
-  post: { slug, title, body, summary, createdAt },
+  post: { slug, title, featuredImageUrl, body, summary, createdAt },
   className,
 }: BlogPostEntryProps) {
   const postLink = `/blog/${slug}`;
@@ -17,6 +18,12 @@ export default function BlogPostEntry({
     <Card className={className}>
       <article>
         <Card.Body>
+          <Image
+            src={featuredImageUrl}
+            alt="Post image"
+            height={300}
+            width={450}
+          ></Image>
           <Card.Title>
             <Link href={postLink}>{title}</Link>
           </Card.Title>

@@ -1,4 +1,4 @@
-import { Button, Form } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import * as BlogApi from "@/network/api/blog";
@@ -6,6 +6,7 @@ import FormInputField from "@/components/form/FormInputField";
 import MarkDownEditor from "@/components/form/MarkdownEditor";
 import { generateSlug } from "@/utils/utils";
 import LoadingButton from "@/components/LoadingButton";
+import { useRouter } from "next/router";
 
 interface CreatePostFormData {
   slug: string;
@@ -16,6 +17,7 @@ interface CreatePostFormData {
 }
 
 export default function CreateBlogPostPage() {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -41,6 +43,7 @@ export default function CreateBlogPostPage() {
         body,
       });
       toast.success("Blog created successfully");
+      await router.push(`/blog/${slug}`);
     } catch (error: any) {
       toast.error(error?.response?.data?.error ?? error?.message);
     }

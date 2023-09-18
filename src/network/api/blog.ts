@@ -26,3 +26,13 @@ export async function getAllBlogPosts() {
   const response = await api.get<BlogPost[]>(baseURL);
   return response.data;
 }
+
+export async function getBlogPostBySlug(slug: string) {
+  const response = await api.get<BlogPost>(`${baseURL}/post/${slug}`);
+  return response.data;
+}
+
+export async function getAllBlogPostsSlugs() {
+  const response = await api.get<string[]>(`${baseURL}/slugs`);
+  return response.data;
+}
