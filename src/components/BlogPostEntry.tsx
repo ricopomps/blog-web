@@ -17,13 +17,16 @@ export default function BlogPostEntry({
   return (
     <Card className={className}>
       <article>
-        <Card.Body>
+        <Link href={postLink}>
           <Image
             src={featuredImageUrl}
             alt="Post image"
-            height={300}
-            width={450}
+            width={550}
+            height={200}
+            className="card-img-top object-fit-cover"
           ></Image>
+        </Link>
+        <Card.Body>
           <Card.Title>
             <Link href={postLink}>{title}</Link>
           </Card.Title>

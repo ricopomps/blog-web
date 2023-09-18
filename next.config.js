@@ -2,16 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    remotePatterns: [
-      {
-        protocol: "http",
-        hostname: "localhost",
-      },
-      {
-        protocol: "https",
-        hostname: process.env.NEXT_PUBLIC_BACKEND_URL,
-      },
-    ],
+    domains: ["localhost"],
+    deviceSizes: [576, 768, 992, 1200, 1400], //Bootsraps sizes
   },
 };
 
