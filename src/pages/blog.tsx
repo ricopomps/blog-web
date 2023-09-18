@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { Button } from "react-bootstrap";
 
 export default function BlogPage() {
   return (
@@ -7,7 +8,12 @@ export default function BlogPage() {
         <title>Articles - Blog</title>
         <meta name="description" content="Read the coolest blog posts!" />
       </Head>
-      <div>blog</div>
+      <div>
+        <div>blog</div>
+        <div>
+          <Button>Button</Button>
+        </div>
+      </div>
     </>
   );
 }
