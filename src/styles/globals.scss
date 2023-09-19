@@ -3,6 +3,7 @@
 @import "custom-theme";
 
 :root {
+  --popup-box-shadow: 3px 3px 13px 4px rgba(0, 0, 0, 0.3);
 }
 
 * {
@@ -29,6 +30,18 @@ a,
 
 .btn-close {
   filter: brightness(0) invert(1);
+}
+
+.dropdown-menu {
+  box-shadow: var(--popup-box-shadow);
+}
+
+.tooltip-inner {
+  box-shadow: var(--popup-box-shadow);
+}
+
+.tooltip.show {
+  opacity: 1;
 }
 
 .Toastify__toast--success {

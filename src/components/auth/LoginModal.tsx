@@ -1,4 +1,4 @@
-import { Button, Form, Modal } from "react-bootstrap";
+import { Alert, Button, Form, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import * as UsersApi from "@/network/api/user";
 import { toast } from "react-toastify";
@@ -6,6 +6,9 @@ import { AxiosError } from "axios";
 import FormInputField from "../form/FormInputField";
 import PasswordInputField from "../form/PasswordInputField";
 import LoadingButton from "../LoadingButton";
+import { useState } from "react";
+import { UnauthorizedError } from "@/network/http-errors";
+import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
 
 interface LoginFormData {
   username: string;
@@ -23,6 +26,9 @@ export default function LoginModal({
   onSignUpInsteadClicked,
   onForgotPasswordClicked,
 }: LoginModalProps) {
+  const { mutateUser } = useAuthenticatedUser();
+  const [errorText, setErrorText] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -31,22 +37,29 @@ export default function LoginModal({
 
   async function onSubmit(credentials: LoginFormData) {
     try {
+      setErrorText(null);
       const newUser = await UsersApi.login(credentials);
+      mutateUser(newUser);
       toast.success("Log In successful");
+      onDismiss();
     } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else if (typeof error === "string") {
-        toast.error(error);
-      } else if (isAxiosError(error)) {
-        const axiosError = error as AxiosError<{ error: string }>;
-        if (axiosError.response?.data?.error) {
-          toast.error(axiosError.response.data.error);
+      if (error instanceof UnauthorizedError) {
+        setErrorText("Invalid credentials"); //change passport js to send the message
+      } else {
+        if (error instanceof Error) {
+          toast.error(error.message);
+        } else if (typeof error === "string") {
+          toast.error(error);
+        } else if (isAxiosError(error)) {
+          const axiosError = error as AxiosError<{ error: string }>;
+          if (axiosError.response?.data?.error) {
+            toast.error(axiosError.response.data.error);
+          } else {
+            toast.error("An error occurred.");
+          }
         } else {
           toast.error("An error occurred.");
         }
-      } else {
-        toast.error("An error occurred.");
       }
     }
   }
@@ -56,11 +69,12 @@ export default function LoginModal({
   }
 
   return (
-    <Modal onHide={onDismiss} centered>
+    <Modal onHide={onDismiss} centered show>
       <Modal.Header closeButton>
         <Modal.Title>Log In</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        {errorText && <Alert variant="danger">{errorText}</Alert>}
         <Form onSubmit={handleSubmit(onSubmit)} noValidate>
           <FormInputField
             register={register("username")}
@@ -86,7 +100,10 @@ export default function LoginModal({
           </LoadingButton>
         </Form>
         <div className="d-flex align-items-center gap-1 justify-content-center mt-1">
-          Don&apos;t have an account yet? <Button variant="link">Log In</Button>
+          Don&apos;t have an account yet?{" "}
+          <Button variant="link" onClick={onSignUpInsteadClicked}>
+            Sign Up
+          </Button>
         </div>
       </Modal.Body>
     </Modal>

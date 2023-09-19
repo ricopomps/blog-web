@@ -2,7 +2,6 @@ import Footer from "@/components/Footer";
 import NavBar from "@/components/NavBar";
 import LoginModal from "@/components/auth/LoginModal";
 import SingUpModal from "@/components/auth/SignUpModal";
-import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
 import styles from "@/styles/App.module.css";
 import "@/styles/globals.scss";
 import "@/styles/utils.css";
@@ -16,9 +15,6 @@ import { ToastContainer } from "react-toastify";
 const raleway = Raleway({ weight: "300", subsets: ["latin"] });
 
 export default function App({ Component, pageProps }: AppProps) {
-  const { user, userLoading, userLoadingError, mutateUser } =
-    useAuthenticatedUser();
-
   return (
     <>
       <Head>
@@ -42,12 +38,6 @@ export default function App({ Component, pageProps }: AppProps) {
           </main>
           <ToastContainer />
           <Footer />
-          <SingUpModal onDismiss={() => {}} onLoginInsteadClicked={() => {}} />
-          <LoginModal
-            onDismiss={() => {}}
-            onForgotPasswordClicked={() => {}}
-            onSignUpInsteadClicked={() => {}}
-          />
         </div>
       </SSRProvider>
     </>

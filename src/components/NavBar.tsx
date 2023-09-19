@@ -1,12 +1,22 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Container, Nav, Navbar } from "react-bootstrap";
+import { Button, Container, Nav, NavDropdown, Navbar } from "react-bootstrap";
 import { FiEdit } from "react-icons/fi";
 import Image from "next/image";
 import logo from "@/assets/images/logo.png";
 import styles from "@/styles/NavBar.module.css";
+import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
+import { useState } from "react";
+import LoginModal from "./auth/LoginModal";
+import SingUpModal from "./auth/SignUpModal";
+import { User } from "@/models/user";
+import profilePicPlaceholder from "@/assets/images/profile-pic-placeholder.png";
+import * as UsersApi from "@/network/api/user";
+import { isAxiosError, AxiosError } from "axios";
+import { toast } from "react-toastify";
 
 export default function NavBar() {
+  const { user } = useAuthenticatedUser();
   const router = useRouter();
 
   return (
@@ -34,18 +44,122 @@ export default function NavBar() {
               Articles
             </Nav.Link>
           </Nav>
-          <Nav className="ms-auto">
-            <Nav.Link
-              as={Link}
-              href="/blog/new-post"
-              className="link-primary d-flex align-items-center gap-1"
-            >
-              <FiEdit />
-              Create post
-            </Nav.Link>
-          </Nav>
+          {user ? <LoggedInView user={user} /> : <LoggedOutView />}
         </Navbar.Collapse>
       </Container>
     </Navbar>
+  );
+}
+
+interface LoggedInViewProps {
+  user: User;
+}
+
+function LoggedInView({ user }: LoggedInViewProps) {
+  const { mutateUser } = useAuthenticatedUser();
+
+  async function logout() {
+    try {
+      await UsersApi.logout();
+      mutateUser(null);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else if (typeof error === "string") {
+        toast.error(error);
+      } else if (isAxiosError(error)) {
+        const axiosError = error as AxiosError<{ error: string }>;
+        if (axiosError.response?.data?.error) {
+          toast.error(axiosError.response.data.error);
+        } else {
+          toast.error("An error occurred.");
+        }
+      } else {
+        toast.error("An error occurred.");
+      }
+    }
+  }
+
+  return (
+    <Nav className="ms-auto">
+      <Nav.Link
+        as={Link}
+        href="/blog/new-post"
+        className="link-primary d-flex align-items-center gap-1"
+      >
+        <FiEdit />
+        Create post
+      </Nav.Link>
+      <Navbar.Text className="ms-md-3">
+        Hey, {user.displayName || "User"}!
+      </Navbar.Text>
+      <NavDropdown
+        className={styles.accountDropdown}
+        title={
+          <Image
+            src={user.profilePicUrl || profilePicPlaceholder}
+            alt={"User profile picture"}
+            width={40}
+            height={40}
+            className="rounded-circle"
+          />
+        }
+      >
+        {user.username && (
+          <>
+            <NavDropdown.Item as={Link} href={`/users/${user.username}`}>
+              Profile
+            </NavDropdown.Item>
+            <NavDropdown.Divider />
+          </>
+        )}
+
+        <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
+      </NavDropdown>
+    </Nav>
+  );
+}
+
+function LoggedOutView() {
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
+  return (
+    <>
+      <Nav className="ms-auto">
+        <Button
+          variant="outline-primary"
+          onClick={() => setShowLoginModal(true)}
+          className="ms-md-2 mt-2 mt-md-0"
+        >
+          Log In
+        </Button>
+
+        <Button
+          onClick={() => setShowSignUpModal(true)}
+          className="ms-md-2 mt-2 mt-md-0"
+        >
+          Sign Up
+        </Button>
+      </Nav>
+      {showLoginModal && (
+        <LoginModal
+          onDismiss={() => setShowLoginModal(false)}
+          onSignUpInsteadClicked={() => {
+            setShowLoginModal(false);
+            setShowSignUpModal(true);
+          }}
+          onForgotPasswordClicked={() => {}}
+        />
+      )}
+      {showSignUpModal && (
+        <SingUpModal
+          onDismiss={() => setShowSignUpModal(false)}
+          onLoginInsteadClicked={() => {
+            setShowSignUpModal(false);
+            setShowLoginModal(true);
+          }}
+        />
+      )}
+    </>
   );
 }
