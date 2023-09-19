@@ -9,6 +9,8 @@ import { ToastContainer } from "react-toastify";
 import NextNProgress from "nextjs-progressbar";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
+import SingUpModal from "@/components/auth/SignUpModal";
+import LoginModal from "@/components/auth/LoginModal";
 
 const raleway = Raleway({ weight: "300", subsets: ["latin"] });
 
@@ -36,6 +38,12 @@ export default function App({ Component, pageProps }: AppProps) {
           </main>
           <ToastContainer />
           <Footer />
+          <SingUpModal onDismiss={() => {}} onLoginInsteadClicked={() => {}} />
+          <LoginModal
+            onDismiss={() => {}}
+            onForgotPasswordClicked={() => {}}
+            onSignUpInsteadClicked={() => {}}
+          />
         </div>
       </SSRProvider>
     </>
