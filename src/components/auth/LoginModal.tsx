@@ -12,6 +12,7 @@ import * as yup from "yup";
 import LoadingButton from "../LoadingButton";
 import FormInputField from "../form/FormInputField";
 import PasswordInputField from "../form/PasswordInputField";
+import { handleError } from "@/utils/utils";
 
 const validationSchema = yup.object({
   username: requiredStringSchema,
@@ -53,20 +54,7 @@ export default function LoginModal({
       if (error instanceof BadRequestError) {
         setErrorText("Invalid credentials"); //change passport js to send the message
       } else {
-        if (error instanceof Error) {
-          toast.error(error.message);
-        } else if (typeof error === "string") {
-          toast.error(error);
-        } else if (isAxiosError(error)) {
-          const axiosError = error as AxiosError<{ error: string }>;
-          if (axiosError.response?.data?.error) {
-            toast.error(axiosError.response.data.error);
-          } else {
-            toast.error("An error occurred.");
-          }
-        } else {
-          toast.error("An error occurred.");
-        }
+        handleError(error);
       }
     }
   }

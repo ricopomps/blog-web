@@ -1,5 +1,6 @@
 import { User } from "@/models/user";
 import api from "@/network/axiosInstance";
+import { generateFormData } from "@/utils/utils";
 
 const baseUrl = "/users";
 
@@ -31,4 +32,23 @@ export async function login(credentials: LoginValues) {
 
 export async function logout() {
   await api.post(`${baseUrl}/logout`);
+}
+
+export async function getUserByUsername(username: string) {
+  const response = await api.get<User>(`${baseUrl}/profile/${username}`);
+  return response.data;
+}
+
+interface UpdateUserValues {
+  username?: string;
+  displayName?: string;
+  about?: string;
+  profilePic?: File;
+}
+
+export async function updateUser(input: UpdateUserValues) {
+  const formData = generateFormData(input);
+
+  const response = await api.patch<User>(`${baseUrl}/me`, formData);
+  return response.data;
 }

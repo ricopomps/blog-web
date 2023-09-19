@@ -1,9 +1,8 @@
 import { User } from "@/models/user";
-import Image from "next/image";
-import profilePicPlaceholder from "@/assets/images/profile-pic-placeholder.png";
+import { formatDate } from "@/utils/utils";
 import Link from "next/link";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { formatDate } from "@/utils/utils";
+import ProfileImage from "./ProfileImage";
 
 interface UserProfileLinkProps {
   user: User;
@@ -20,12 +19,9 @@ export default function UserProfileLink({ user }: UserProfileLinkProps) {
       delay={{ show: 500, hide: 0 }}
     >
       <span className="d-flex align-items-center w-fit-content">
-        <Image
-          src={user.profilePicUrl || profilePicPlaceholder}
-          width={40}
-          height={40}
+        <ProfileImage
+          src={user.profilePicUrl}
           alt={`Profile pic user: ${user.username}`}
-          className="rounded-circle"
         />
         <Link href={`/users/${user.username}`} className="ms-2">
           {user.displayName}
@@ -44,8 +40,8 @@ function UserTooltipContent({
 }: UserTooltipContentProps) {
   return (
     <div>
-      <Image
-        src={profilePicUrl || profilePicPlaceholder}
+      <ProfileImage
+        src={profilePicUrl}
         width={150}
         height={150}
         alt={`Profile pic user: ${username}`}

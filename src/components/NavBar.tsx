@@ -1,19 +1,20 @@
+import logo from "@/assets/images/logo.png";
+import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
+import { User } from "@/models/user";
+import * as UsersApi from "@/network/api/user";
+import styles from "@/styles/NavBar.module.css";
+import { AxiosError, isAxiosError } from "axios";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import { Button, Container, Nav, NavDropdown, Navbar } from "react-bootstrap";
 import { FiEdit } from "react-icons/fi";
-import Image from "next/image";
-import logo from "@/assets/images/logo.png";
-import styles from "@/styles/NavBar.module.css";
-import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
-import { useState } from "react";
+import { toast } from "react-toastify";
+import ProfileImage from "./ProfileImage";
 import LoginModal from "./auth/LoginModal";
 import SingUpModal from "./auth/SignUpModal";
-import { User } from "@/models/user";
-import profilePicPlaceholder from "@/assets/images/profile-pic-placeholder.png";
-import * as UsersApi from "@/network/api/user";
-import { isAxiosError, AxiosError } from "axios";
-import { toast } from "react-toastify";
+import { handleError } from "@/utils/utils";
 
 export default function NavBar() {
   const { user } = useAuthenticatedUser();
@@ -63,20 +64,7 @@ function LoggedInView({ user }: LoggedInViewProps) {
       await UsersApi.logout();
       mutateUser(null);
     } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else if (typeof error === "string") {
-        toast.error(error);
-      } else if (isAxiosError(error)) {
-        const axiosError = error as AxiosError<{ error: string }>;
-        if (axiosError.response?.data?.error) {
-          toast.error(axiosError.response.data.error);
-        } else {
-          toast.error("An error occurred.");
-        }
-      } else {
-        toast.error("An error occurred.");
-      }
+      handleError(error);
     }
   }
 
@@ -95,15 +83,7 @@ function LoggedInView({ user }: LoggedInViewProps) {
       </Navbar.Text>
       <NavDropdown
         className={styles.accountDropdown}
-        title={
-          <Image
-            src={user.profilePicUrl || profilePicPlaceholder}
-            alt={"User profile picture"}
-            width={40}
-            height={40}
-            className="rounded-circle"
-          />
-        }
+        title={<ProfileImage src={user.profilePicUrl} />}
       >
         {user.username && (
           <>

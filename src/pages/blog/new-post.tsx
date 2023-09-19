@@ -2,7 +2,7 @@ import LoadingButton from "@/components/LoadingButton";
 import FormInputField from "@/components/form/FormInputField";
 import MarkDownEditor from "@/components/form/MarkdownEditor";
 import * as BlogApi from "@/network/api/blog";
-import { generateSlug } from "@/utils/utils";
+import { generateSlug, handleError } from "@/utils/utils";
 import {
   requiredFileSchema,
   requiredStringSchema,
@@ -55,8 +55,8 @@ export default function CreateBlogPostPage() {
       });
       toast.success("Blog created successfully");
       await router.push(`/blog/${slug}`);
-    } catch (error: any) {
-      toast.error(error?.response?.data?.error ?? error?.message);
+    } catch (error) {
+      handleError(error);
     }
   }
 
