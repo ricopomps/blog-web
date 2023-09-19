@@ -1,19 +1,24 @@
+import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
+import * as UsersApi from "@/network/api/user";
+import { BadRequestError } from "@/network/http-errors";
+import { requiredStringSchema } from "@/utils/validation";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { AxiosError } from "axios";
+import { useState } from "react";
 import { Alert, Button, Form, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import * as UsersApi from "@/network/api/user";
 import { toast } from "react-toastify";
-import { AxiosError } from "axios";
+import * as yup from "yup";
+import LoadingButton from "../LoadingButton";
 import FormInputField from "../form/FormInputField";
 import PasswordInputField from "../form/PasswordInputField";
-import LoadingButton from "../LoadingButton";
-import { useState } from "react";
-import { UnauthorizedError } from "@/network/http-errors";
-import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
 
-interface LoginFormData {
-  username: string;
-  password: string;
-}
+const validationSchema = yup.object({
+  username: requiredStringSchema,
+  password: requiredStringSchema,
+});
+
+type LoginFormData = yup.InferType<typeof validationSchema>;
 
 interface LoginModalProps {
   onDismiss: () => void;
@@ -33,7 +38,9 @@ export default function LoginModal({
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormData>();
+  } = useForm<LoginFormData>({
+    resolver: yupResolver(validationSchema),
+  });
 
   async function onSubmit(credentials: LoginFormData) {
     try {
@@ -43,7 +50,7 @@ export default function LoginModal({
       toast.success("Log In successful");
       onDismiss();
     } catch (error) {
-      if (error instanceof UnauthorizedError) {
+      if (error instanceof BadRequestError) {
         setErrorText("Invalid credentials"); //change passport js to send the message
       } else {
         if (error instanceof Error) {

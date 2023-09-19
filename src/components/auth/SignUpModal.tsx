@@ -1,20 +1,30 @@
+import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
+import * as UsersApi from "@/network/api/user";
+import { BadRequestError, ConflictError } from "@/network/http-errors";
+import {
+  emailSchema,
+  passwordSchema,
+  usernameSchema,
+} from "@/utils/validation";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { AxiosError } from "axios";
+import { useState } from "react";
 import { Alert, Button, Form, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import * as UsersApi from "@/network/api/user";
 import { toast } from "react-toastify";
-import { AxiosError } from "axios";
+import * as yup from "yup";
+import { InferType } from "yup";
+import LoadingButton from "../LoadingButton";
 import FormInputField from "../form/FormInputField";
 import PasswordInputField from "../form/PasswordInputField";
-import LoadingButton from "../LoadingButton";
-import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
-import { useState } from "react";
-import { BadRequestError, ConflictError } from "@/network/http-errors";
 
-interface SingUpFormData {
-  username: string;
-  email: string;
-  password: string;
-}
+const validationSchema = yup.object({
+  username: usernameSchema.required("Required"),
+  email: emailSchema.required("Required"),
+  password: passwordSchema.required("Required"),
+});
+
+type SingUpFormData = InferType<typeof validationSchema>;
 
 interface SingUpModalProps {
   onDismiss: () => void;
@@ -32,7 +42,9 @@ export default function SingUpModal({
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<SingUpFormData>();
+  } = useForm<SingUpFormData>({
+    resolver: yupResolver(validationSchema),
+  });
 
   async function onSubmit(credentials: SingUpFormData) {
     try {
@@ -90,8 +102,8 @@ export default function SingUpModal({
           />
           <PasswordInputField
             register={register("password")}
-            label="password"
-            placeholder="password"
+            label="Password"
+            placeholder="Password"
             error={errors.password}
           />
           <LoadingButton
