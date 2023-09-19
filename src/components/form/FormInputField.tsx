@@ -19,7 +19,7 @@ export default function FormInputField({
   return (
     <Form.Group className="mb-3" controlId={`${register.name}-input`}>
       {label && <Form.Label>{label}</Form.Label>}
-      <InputGroup hasValidation>
+      <InputGroup>
         <Form.Control
           {...register}
           {...props}

@@ -3,6 +3,11 @@ import api from "@/network/axiosInstance";
 
 const baseUrl = "/users";
 
+export async function getAuthenticatedUser() {
+  const response = await api.get<User>(`${baseUrl}/me`);
+  return response.data;
+}
+
 interface SignUpValues {
   username: string;
   email: string;
@@ -22,4 +27,8 @@ interface LoginValues {
 export async function login(credentials: LoginValues) {
   const response = await api.post<User>(`${baseUrl}/login`, credentials);
   return response.data;
+}
+
+export async function logout() {
+  await api.post(`${baseUrl}/logout`);
 }
