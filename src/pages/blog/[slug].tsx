@@ -7,6 +7,8 @@ import Link from "next/link";
 import { formatDate } from "@/utils/utils";
 import Image from "next/image";
 import { NotFoundError } from "@/network/http-errors";
+import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
+import { FiEdit } from "react-icons/fi";
 export const getStaticPaths: GetStaticPaths = async () => {
   const slugs = await BlogApi.getAllBlogPostsSlugs();
 
@@ -48,10 +50,13 @@ export default function BlogPostPage({
     summary,
     featuredImageUrl,
     body,
+    author,
     createdAt,
     updatedAt,
   },
 }: BlogPostPageProps) {
+  const { user } = useAuthenticatedUser();
+
   const createdUpdatedText =
     updatedAt > createdAt ? (
       <>
@@ -68,6 +73,15 @@ export default function BlogPostPage({
       </Head>
 
       <div className={styles.container}>
+        {user?._id === author._id && (
+          <Link
+            href={`/blog/edit-post/${slug}`}
+            className="btn btn-outline-primary d-inline-flex align-items-center gap-1 mb-2"
+          >
+            <FiEdit />
+            Edit post
+          </Link>
+        )}
         <div className="text-center mb-4">
           <Link href="/blog">← Blog Home</Link>
         </div>

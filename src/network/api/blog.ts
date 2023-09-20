@@ -40,3 +40,23 @@ export async function getAllBlogPostsSlugs() {
   const response = await api.get<string[]>(`${baseUrl}/slugs`);
   return response.data;
 }
+
+interface UpdateBlogPostValues {
+  slug: string;
+  title: string;
+  summary: string;
+  body: string;
+  featuredImage?: File;
+}
+
+export async function updateBlogPost(
+  blogPostId: string,
+  input: UpdateBlogPostValues
+) {
+  const formData = generateFormData(input);
+  await api.patch(`${baseUrl}/${blogPostId}`, formData);
+}
+
+export async function deleteBlogPost(blogPostId: string) {
+  await api.delete(`${baseUrl}/${blogPostId}`);
+}
