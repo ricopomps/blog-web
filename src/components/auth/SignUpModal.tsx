@@ -18,6 +18,7 @@ import LoadingButton from "../LoadingButton";
 import FormInputField from "../form/FormInputField";
 import PasswordInputField from "../form/PasswordInputField";
 import { handleError } from "@/utils/utils";
+import SocialSignInSection from "./SocialSignInSection";
 
 const validationSchema = yup.object({
   username: usernameSchema.required("Required"),
@@ -63,10 +64,6 @@ export default function SingUpModal({
     }
   }
 
-  function isAxiosError(error: unknown): error is AxiosError {
-    return (error as AxiosError).isAxiosError === true;
-  }
-
   return (
     <Modal onHide={onDismiss} centered show>
       <Modal.Header closeButton>
@@ -102,6 +99,8 @@ export default function SingUpModal({
             Sign Up
           </LoadingButton>
         </Form>
+        <hr />
+        <SocialSignInSection />
         <div className="d-flex align-items-center gap-1 justify-content-center mt-1">
           Already have an account?{" "}
           <Button variant="link" onClick={onLoginInsteadClicked}>

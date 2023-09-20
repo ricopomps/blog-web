@@ -2,19 +2,23 @@ import Footer from "@/components/Footer";
 import NavBar from "@/components/NavBar";
 import LoginModal from "@/components/auth/LoginModal";
 import SingUpModal from "@/components/auth/SignUpModal";
+import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
 import styles from "@/styles/App.module.css";
 import "@/styles/globals.scss";
 import "@/styles/utils.css";
 import type { AppProps } from "next/app";
 import { Raleway } from "next/font/google";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import NextNProgress from "nextjs-progressbar";
+import { useEffect } from "react";
 import { Container, SSRProvider } from "react-bootstrap";
 import { ToastContainer } from "react-toastify";
 
 const raleway = Raleway({ weight: "300", subsets: ["latin"] });
 
 export default function App({ Component, pageProps }: AppProps) {
+  useOnboardingRedirect();
   return (
     <>
       <Head>
@@ -42,4 +46,14 @@ export default function App({ Component, pageProps }: AppProps) {
       </SSRProvider>
     </>
   );
+}
+
+function useOnboardingRedirect() {
+  const { user } = useAuthenticatedUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user && !user.username && router.pathname !== "/onboarding")
+      router.push(`/onboarding?returnTo=${router.asPath}`);
+  }, [user, router]);
 }

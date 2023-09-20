@@ -13,6 +13,7 @@ import LoadingButton from "../LoadingButton";
 import FormInputField from "../form/FormInputField";
 import PasswordInputField from "../form/PasswordInputField";
 import { handleError } from "@/utils/utils";
+import SocialSignInSection from "./SocialSignInSection";
 
 const validationSchema = yup.object({
   username: requiredStringSchema,
@@ -59,10 +60,6 @@ export default function LoginModal({
     }
   }
 
-  function isAxiosError(error: unknown): error is AxiosError {
-    return (error as AxiosError).isAxiosError === true;
-  }
-
   return (
     <Modal onHide={onDismiss} centered show>
       <Modal.Header closeButton>
@@ -94,6 +91,8 @@ export default function LoginModal({
             Log In
           </LoadingButton>
         </Form>
+        <hr />
+        <SocialSignInSection />
         <div className="d-flex align-items-center gap-1 justify-content-center mt-1">
           Don&apos;t have an account yet?{" "}
           <Button variant="link" onClick={onSignUpInsteadClicked}>
