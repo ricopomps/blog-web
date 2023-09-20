@@ -1,4 +1,4 @@
-import { BlogPost } from "@/models/blogPost";
+import { BlogPost, BlogPostPage } from "@/models/blogPost";
 import api from "@/network/axiosInstance";
 import { generateFormData } from "@/utils/utils";
 
@@ -19,14 +19,14 @@ export async function createBlogPost(input: CreateBlogPostValues) {
   return response.data;
 }
 
-export async function getAllBlogPosts() {
-  const response = await api.get<BlogPost[]>(baseUrl);
+export async function getAllBlogPosts(page: number = 1) {
+  const response = await api.get<BlogPostPage>(baseUrl, { params: { page } });
   return response.data;
 }
 
-export async function getBlogPostsByUser(userId: string) {
-  const response = await api.get<BlogPost[]>(baseUrl, {
-    params: { userId },
+export async function getBlogPostsByUser(userId: string, page: number = 1) {
+  const response = await api.get<BlogPostPage>(baseUrl, {
+    params: { userId, page },
   });
   return response.data;
 }
