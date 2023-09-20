@@ -57,3 +57,21 @@ export async function updateUser(input: UpdateUserValues) {
   const response = await api.patch<User>(`${baseUrl}/me`, formData);
   return response.data;
 }
+
+export async function requestPasswordResetCode(email: string) {
+  await api.post(`${baseUrl}/resetpasswordcode`, { email });
+}
+
+interface ResetPasswordValues {
+  email: string;
+  password: string;
+  verificationCode: string;
+}
+
+export async function resetPassword(credentials: ResetPasswordValues) {
+  const response = await api.post<User>(
+    `${baseUrl}/resetpassword`,
+    credentials
+  );
+  return response.data;
+}

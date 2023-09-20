@@ -15,6 +15,7 @@ import ProfileImage from "./ProfileImage";
 import LoginModal from "./auth/LoginModal";
 import SingUpModal from "./auth/SignUpModal";
 import { handleError } from "@/utils/utils";
+import ResetPasswordModal from "./auth/ResetPasswordModal";
 
 export default function NavBar() {
   const { user } = useAuthenticatedUser();
@@ -103,6 +104,8 @@ function LoggedInView({ user }: LoggedInViewProps) {
 function LoggedOutView() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
+
   return (
     <>
       <Nav className="ms-auto">
@@ -128,7 +131,10 @@ function LoggedOutView() {
             setShowLoginModal(false);
             setShowSignUpModal(true);
           }}
-          onForgotPasswordClicked={() => {}}
+          onForgotPasswordClicked={() => {
+            setShowLoginModal(false);
+            setShowResetPasswordModal(true);
+          }}
         />
       )}
       {showSignUpModal && (
@@ -137,6 +143,15 @@ function LoggedOutView() {
           onLoginInsteadClicked={() => {
             setShowSignUpModal(false);
             setShowLoginModal(true);
+          }}
+        />
+      )}
+      {showResetPasswordModal && (
+        <ResetPasswordModal
+          onDismiss={() => setShowResetPasswordModal(false)}
+          onSignUpClicked={() => {
+            setShowResetPasswordModal(false);
+            setShowSignUpModal(true);
           }}
         />
       )}

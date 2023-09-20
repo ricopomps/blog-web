@@ -80,7 +80,11 @@ export default function LoginModal({
             placeholder="password"
             error={errors.password}
           />
-          <Button variant="link" className="d-block ms-auto mt-n3 mb-3 small">
+          <Button
+            variant="link"
+            className="d-block ms-auto mt-n3 mb-3 small"
+            onClick={onForgotPasswordClicked}
+          >
             Forgot password?
           </Button>
           <LoadingButton
