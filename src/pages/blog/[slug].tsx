@@ -9,6 +9,7 @@ import Image from "next/image";
 import { NotFoundError } from "@/network/http-errors";
 import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
 import { FiEdit } from "react-icons/fi";
+import useSWR from "swr";
 export const getStaticPaths: GetStaticPaths = async () => {
   const slugs = await BlogApi.getAllBlogPostsSlugs();
 
@@ -27,8 +28,8 @@ export const getStaticProps: GetStaticProps<BlogPostPageProps> = async ({
     const slug = params?.slug?.toString();
     if (!slug) throw Error("Slug missing");
 
-    const post = await BlogApi.getBlogPostBySlug(slug);
-    return { props: { post } };
+    const fallbackPost = await BlogApi.getBlogPostBySlug(slug);
+    return { props: { fallbackPost } };
   } catch (error) {
     if (error instanceof NotFoundError) {
       return { notFound: true };
@@ -39,11 +40,19 @@ export const getStaticProps: GetStaticProps<BlogPostPageProps> = async ({
 };
 
 interface BlogPostPageProps {
-  post: BlogPost;
+  fallbackPost: BlogPost;
 }
 
-export default function BlogPostPage({
-  post: {
+export default function BlogPostPage({ fallbackPost }: BlogPostPageProps) {
+  const { user } = useAuthenticatedUser();
+
+  const { data: blogPost } = useSWR(
+    fallbackPost.slug,
+    BlogApi.getBlogPostBySlug,
+    { revalidateOnFocus: false }
+  );
+
+  const {
     _id,
     slug,
     title,
@@ -53,9 +62,7 @@ export default function BlogPostPage({
     author,
     createdAt,
     updatedAt,
-  },
-}: BlogPostPageProps) {
-  const { user } = useAuthenticatedUser();
+  } = blogPost || fallbackPost;
 
   const createdUpdatedText =
     updatedAt > createdAt ? (
