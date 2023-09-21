@@ -1,3 +1,5 @@
+import * as BlogApi from "@/network/api/blog";
+import { handleError } from "@/utils/utils";
 import dynamic from "next/dynamic";
 import { Form } from "react-bootstrap";
 import {
@@ -6,7 +8,7 @@ import {
   UseFormSetValue,
   UseFormWatch,
 } from "react-hook-form";
-import ReactMarkdown from "react-markdown";
+import Markdown from "../Markdown";
 
 const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
   ssr: false,
@@ -30,6 +32,15 @@ export default function MarkDownEditor({
   editorHeight = 500,
   placeholder = "Write something...",
 }: MarkDownEditorProps) {
+  async function uploadInPostImage(image: File) {
+    try {
+      const response = await BlogApi.uploadInPostImage(image);
+      return response.imageUrl;
+    } catch (error) {
+      handleError(error);
+    }
+  }
+
   return (
     <Form.Group className="mb-3">
       {label && (
@@ -38,7 +49,7 @@ export default function MarkDownEditor({
       <MdEditor
         {...register}
         id={`${register.name}-input`}
-        renderHTML={(text) => <ReactMarkdown>{text}</ReactMarkdown>}
+        renderHTML={(text) => <Markdown>{text}</Markdown>}
         onChange={({ text }) =>
           setValue(register.name, text, {
             shouldValidate: true,
@@ -49,6 +60,8 @@ export default function MarkDownEditor({
         className={error ? "is-invalid" : ""}
         style={{ height: editorHeight }}
         placeholder={placeholder}
+        onImageUpload={uploadInPostImage}
+        imageAccept=".jpg,.png"
       />
       {error && (
         <Form.Control.Feedback type="invalid">

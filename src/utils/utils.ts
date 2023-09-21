@@ -38,10 +38,6 @@ export function generateFormData(input: Record<string, any>) {
 export function handleError(error: unknown) {
   if (error instanceof TooManyRequestsError) {
     toast.error("Too many requests, please wait a while");
-  } else if (error instanceof Error) {
-    toast.error(error.message);
-  } else if (typeof error === "string") {
-    toast.error(error);
   } else if (isAxiosError(error)) {
     const axiosError = error as AxiosError<{ error: string }>;
     if (axiosError.response?.data?.error) {
@@ -49,6 +45,10 @@ export function handleError(error: unknown) {
     } else {
       toast.error("An error occurred.");
     }
+  } else if (error instanceof Error) {
+    toast.error(error.message);
+  } else if (typeof error === "string") {
+    toast.error(error);
   } else {
     toast.error("An error occurred.");
   }

@@ -1,3 +1,5 @@
+import Markdown from "@/components/Markdown";
+import UserProfileLink from "@/components/UserProfileLink";
 import BlogCommentSection from "@/components/comments/BlogCommentSection";
 import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
 import { BlogPost } from "@/models/blogPost";
@@ -97,6 +99,9 @@ export default function BlogPostPage({ fallbackPost }: BlogPostPageProps) {
           <div className="d-flex flex-column align-items-center">
             <h1 className="text-center b-3">{title}</h1>
             <p className="text center mb-3 h5">{summary}</p>
+            <p className="d-flex  gap-2 align-items-center">
+              posted by <UserProfileLink user={author} />
+            </p>
             <span className="text-muted">{createdUpdatedText}</span>
             <div className={styles.featuredImageWrapper}>
               <Image
@@ -109,7 +114,9 @@ export default function BlogPostPage({ fallbackPost }: BlogPostPageProps) {
               />
             </div>
           </div>
-          <div>{body}</div>
+          <div>
+            <Markdown>{body}</Markdown>
+          </div>
         </article>
         <hr />
         <BlogCommentSection blogPostId={_id} />

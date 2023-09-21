@@ -60,3 +60,12 @@ export async function updateBlogPost(
 export async function deleteBlogPost(blogPostId: string) {
   await api.delete(`${baseUrl}/${blogPostId}`);
 }
+
+export async function uploadInPostImage(image: File) {
+  const formData = generateFormData({ inPostImage: image });
+  const response = await api.post<{ imageUrl: string }>(
+    `${baseUrl}/images`,
+    formData
+  );
+  return response.data;
+}
