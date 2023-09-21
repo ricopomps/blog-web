@@ -1,5 +1,5 @@
 import { TooManyRequestsError } from "@/network/http-errors";
-import { isAxiosError, AxiosError } from "axios";
+import { AxiosError, isAxiosError } from "axios";
 import format from "date-fns/format";
 import { ptBR } from "date-fns/locale";
 import { toast } from "react-toastify";

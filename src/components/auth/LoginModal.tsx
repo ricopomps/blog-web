@@ -1,9 +1,9 @@
 import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
 import * as UsersApi from "@/network/api/user";
-import { BadRequestError, UnauthorizedError } from "@/network/http-errors";
+import { UnauthorizedError } from "@/network/http-errors";
+import { handleError } from "@/utils/utils";
 import { requiredStringSchema } from "@/utils/validation";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { AxiosError } from "axios";
 import { useState } from "react";
 import { Alert, Button, Form, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
@@ -12,7 +12,6 @@ import * as yup from "yup";
 import LoadingButton from "../LoadingButton";
 import FormInputField from "../form/FormInputField";
 import PasswordInputField from "../form/PasswordInputField";
-import { handleError } from "@/utils/utils";
 import SocialSignInSection from "./SocialSignInSection";
 
 const validationSchema = yup.object({

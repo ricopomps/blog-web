@@ -1,7 +1,6 @@
 import Footer from "@/components/Footer";
 import NavBar from "@/components/NavBar";
-import LoginModal from "@/components/auth/LoginModal";
-import SingUpModal from "@/components/auth/SignUpModal";
+import AuthModalsProvider from "@/components/auth/AuthModalsProvider";
 import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
 import styles from "@/styles/App.module.css";
 import "@/styles/globals.scss";
@@ -32,17 +31,19 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
 
       <SSRProvider>
-        <div className={raleway.className}>
-          <NextNProgress color="#21fa90" />
-          <NavBar />
-          <main>
-            <Container className={styles.pageContainer}>
-              <Component {...pageProps} />
-            </Container>
-          </main>
-          <ToastContainer />
-          <Footer />
-        </div>
+        <AuthModalsProvider>
+          <div className={raleway.className}>
+            <NextNProgress color="#21fa90" />
+            <NavBar />
+            <main>
+              <Container className={styles.pageContainer}>
+                <Component {...pageProps} />
+              </Container>
+            </main>
+            <ToastContainer />
+            <Footer />
+          </div>
+        </AuthModalsProvider>
       </SSRProvider>
     </>
   );

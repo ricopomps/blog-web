@@ -3,19 +3,15 @@ import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
 import { User } from "@/models/user";
 import * as UsersApi from "@/network/api/user";
 import styles from "@/styles/NavBar.module.css";
-import { AxiosError, isAxiosError } from "axios";
+import { handleError } from "@/utils/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useContext } from "react";
 import { Button, Container, Nav, NavDropdown, Navbar } from "react-bootstrap";
 import { FiEdit } from "react-icons/fi";
-import { toast } from "react-toastify";
 import ProfileImage from "./ProfileImage";
-import LoginModal from "./auth/LoginModal";
-import SingUpModal from "./auth/SignUpModal";
-import { handleError } from "@/utils/utils";
-import ResetPasswordModal from "./auth/ResetPasswordModal";
+import { AuthModalsContext } from "./auth/AuthModalsProvider";
 
 export default function NavBar() {
   const { user } = useAuthenticatedUser();
@@ -102,59 +98,20 @@ function LoggedInView({ user }: LoggedInViewProps) {
 }
 
 function LoggedOutView() {
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showSignUpModal, setShowSignUpModal] = useState(false);
-  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
-
+  const { showLoginModal, showSignUpModal } = useContext(AuthModalsContext);
   return (
-    <>
-      <Nav className="ms-auto">
-        <Button
-          variant="outline-primary"
-          onClick={() => setShowLoginModal(true)}
-          className="ms-md-2 mt-2 mt-md-0"
-        >
-          Log In
-        </Button>
+    <Nav className="ms-auto">
+      <Button
+        variant="outline-primary"
+        onClick={showLoginModal}
+        className="ms-md-2 mt-2 mt-md-0"
+      >
+        Log In
+      </Button>
 
-        <Button
-          onClick={() => setShowSignUpModal(true)}
-          className="ms-md-2 mt-2 mt-md-0"
-        >
-          Sign Up
-        </Button>
-      </Nav>
-      {showLoginModal && (
-        <LoginModal
-          onDismiss={() => setShowLoginModal(false)}
-          onSignUpInsteadClicked={() => {
-            setShowLoginModal(false);
-            setShowSignUpModal(true);
-          }}
-          onForgotPasswordClicked={() => {
-            setShowLoginModal(false);
-            setShowResetPasswordModal(true);
-          }}
-        />
-      )}
-      {showSignUpModal && (
-        <SingUpModal
-          onDismiss={() => setShowSignUpModal(false)}
-          onLoginInsteadClicked={() => {
-            setShowSignUpModal(false);
-            setShowLoginModal(true);
-          }}
-        />
-      )}
-      {showResetPasswordModal && (
-        <ResetPasswordModal
-          onDismiss={() => setShowResetPasswordModal(false)}
-          onSignUpClicked={() => {
-            setShowResetPasswordModal(false);
-            setShowSignUpModal(true);
-          }}
-        />
-      )}
-    </>
+      <Button onClick={showSignUpModal} className="ms-md-2 mt-2 mt-md-0">
+        Sign Up
+      </Button>
+    </Nav>
   );
 }
