@@ -3,7 +3,7 @@ import { Comment } from "@/models/comment";
 import * as CommentApi from "@/network/api/comment";
 import { handleError } from "@/utils/utils";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -22,6 +22,9 @@ interface CreateCommentBoxProps {
   parentCommentId?: string;
   title: string;
   onCommentCreated: (comment: Comment) => void;
+  showCancel?: boolean;
+  onCancel?: () => void;
+  defaultText?: string;
 }
 
 export default function CreateCommentBox({
@@ -29,6 +32,9 @@ export default function CreateCommentBox({
   parentCommentId,
   title,
   onCommentCreated,
+  showCancel,
+  onCancel,
+  defaultText,
 }: CreateCommentBoxProps) {
   const { user } = useAuthenticatedUser();
   const authModalsContext = useContext(AuthModalsContext);
@@ -38,7 +44,9 @@ export default function CreateCommentBox({
     handleSubmit,
     formState: { isSubmitting },
     reset,
+    setFocus,
   } = useForm({
+    defaultValues: { text: defaultText || "" },
     resolver: yupResolver(validationSchema),
   });
 
@@ -57,6 +65,12 @@ export default function CreateCommentBox({
       handleError(error);
     }
   }
+
+  useEffect(() => {
+    if (parentCommentId) {
+      setFocus("text");
+    }
+  }, [parentCommentId, setFocus]);
 
   if (!user) {
     return (
@@ -83,6 +97,11 @@ export default function CreateCommentBox({
         <LoadingButton type="submit" isLoading={isSubmitting}>
           Send comment
         </LoadingButton>
+        {showCancel && (
+          <Button onClick={onCancel} className="ms-2" variant="outline-danger ">
+            Cancel
+          </Button>
+        )}
       </Form>
     </div>
   );

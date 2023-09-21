@@ -3,7 +3,7 @@ import * as CommentApi from "@/network/api/comment";
 import { handleError } from "@/utils/utils";
 import { useCallback, useEffect, useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
-import Comment from "./Comment";
+import CommentThread from "./CommentThread";
 import CreateCommentBox from "./CreateCommentBox";
 
 interface BlogCommentSectionProps {
@@ -63,6 +63,22 @@ function CommentSection({ blogPostId }: BlogCommentSectionProps) {
     setComments((existingComments) => [newComment, ...existingComments]);
   }
 
+  function handleCommentUpdated(updatedComment: CommentModel) {
+    const update = comments.map((exisingComment) =>
+      exisingComment._id === updatedComment._id
+        ? { ...updatedComment, repliesCount: exisingComment.repliesCount }
+        : exisingComment
+    );
+    setComments(update);
+  }
+
+  function handleCommentDeleted(deletedComment: CommentModel) {
+    const update = comments.filter(
+      (comment) => comment._id !== deletedComment._id
+    );
+    setComments(update);
+  }
+
   return (
     <div>
       <p className="h5">Comments</p>
@@ -72,7 +88,12 @@ function CommentSection({ blogPostId }: BlogCommentSectionProps) {
         onCommentCreated={handleCommentCreated}
       />
       {comments.map((comment) => (
-        <Comment comment={comment} key={comment._id} />
+        <CommentThread
+          comment={comment}
+          key={comment._id}
+          onCommentUpdated={handleCommentUpdated}
+          onCommentDeleted={handleCommentDeleted}
+        />
       ))}
       <div className="mt-2 text-center">
         {commentsPaginationEnd && comments.length === 0 && (
