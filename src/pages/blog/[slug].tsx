@@ -1,13 +1,14 @@
-import { BlogPost } from "@/models/blogPost";
-import { GetStaticPaths, GetStaticProps } from "next";
-import * as BlogApi from "@/network/api/blog";
-import Head from "next/head";
-import styles from "@/styles/BlogPostPage.module.css";
-import Link from "next/link";
-import { formatDate } from "@/utils/utils";
-import Image from "next/image";
-import { NotFoundError } from "@/network/http-errors";
+import BlogCommentSection from "@/components/comments/BlogCommentSection";
 import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
+import { BlogPost } from "@/models/blogPost";
+import * as BlogApi from "@/network/api/blog";
+import { NotFoundError } from "@/network/http-errors";
+import styles from "@/styles/BlogPostPage.module.css";
+import { formatDate } from "@/utils/utils";
+import { GetStaticPaths, GetStaticProps } from "next";
+import Head from "next/head";
+import Image from "next/image";
+import Link from "next/link";
 import { FiEdit } from "react-icons/fi";
 import useSWR from "swr";
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -110,6 +111,8 @@ export default function BlogPostPage({ fallbackPost }: BlogPostPageProps) {
           </div>
           <div>{body}</div>
         </article>
+        <hr />
+        <BlogCommentSection blogPostId={_id} />
       </div>
     </>
   );

@@ -1,11 +1,19 @@
 import { TooManyRequestsError } from "@/network/http-errors";
 import { AxiosError, isAxiosError } from "axios";
 import format from "date-fns/format";
-import { ptBR } from "date-fns/locale";
+import formatDistanceToNowStrict from "date-fns/formatDistanceToNowStrict";
+import ptBR from "date-fns/locale/pt-BR";
 import { toast } from "react-toastify";
 
 export function formatDate(dateString: string) {
   return format(new Date(dateString), "MMM d, yyyy", { locale: ptBR });
+}
+
+export function formatRelativeDate(dateString: string) {
+  return formatDistanceToNowStrict(new Date(dateString), {
+    addSuffix: true,
+    locale: ptBR,
+  });
 }
 
 export function generateSlug(input: string) {
