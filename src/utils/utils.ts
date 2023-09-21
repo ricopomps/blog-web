@@ -1,3 +1,4 @@
+import { TooManyRequestsError } from "@/network/http-errors";
 import { isAxiosError, AxiosError } from "axios";
 import format from "date-fns/format";
 import { ptBR } from "date-fns/locale";
@@ -27,7 +28,9 @@ export function generateFormData(input: Record<string, any>) {
 }
 
 export function handleError(error: unknown) {
-  if (error instanceof Error) {
+  if (error instanceof TooManyRequestsError) {
+    toast.error("Too many requests, please wait a while");
+  } else if (error instanceof Error) {
     toast.error(error.message);
   } else if (typeof error === "string") {
     toast.error(error);

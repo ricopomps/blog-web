@@ -1,6 +1,6 @@
 import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
 import * as UsersApi from "@/network/api/user";
-import { BadRequestError } from "@/network/http-errors";
+import { BadRequestError, UnauthorizedError } from "@/network/http-errors";
 import { requiredStringSchema } from "@/utils/validation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { AxiosError } from "axios";
@@ -52,7 +52,8 @@ export default function LoginModal({
       toast.success("Log In successful");
       onDismiss();
     } catch (error) {
-      if (error instanceof BadRequestError) {
+      console.log(error);
+      if (error instanceof UnauthorizedError) {
         setErrorText("Invalid credentials"); //change passport js to send the message
       } else {
         handleError(error);
