@@ -1,26 +1,22 @@
-import { BlogPost } from "@/models/blogPost";
-import { GetServerSideProps } from "next";
-import * as BlogApi from "@/network/api/blog";
-import { NotFoundError } from "@/network/http-errors";
-import * as yup from "yup";
-import {
-  slugSchema,
-  requiredStringSchema,
-  requiredFileSchema,
-} from "@/utils/validation";
-import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
-import { useRouter } from "next/router";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import ConfirmationModal from "@/components/ConfirmationModal";
+import LoadingButton from "@/components/LoadingButton";
 import FormInputField from "@/components/form/FormInputField";
 import MarkDownEditor from "@/components/form/MarkdownEditor";
-import LoadingButton from "@/components/LoadingButton";
-import { generateSlug, handleError } from "@/utils/utils";
-import { Button, Form, Spinner } from "react-bootstrap";
-import { useState } from "react";
-import { toast } from "react-toastify";
-import ConfirmationModal from "@/components/ConfirmationModal";
+import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
 import useUnsavedChangesWarning from "@/hooks/useUnsavedChangesWarning";
+import { BlogPost } from "@/models/blogPost";
+import * as BlogApi from "@/network/api/blog";
+import { NotFoundError } from "@/network/http-errors";
+import { generateSlug, handleError } from "@/utils/utils";
+import { requiredStringSchema, slugSchema } from "@/utils/validation";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { Button, Form, Spinner } from "react-bootstrap";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import * as yup from "yup";
 
 export const getServerSideProps: GetServerSideProps<
   EditBlogPostPageProps

@@ -1,22 +1,22 @@
-import { User } from "@/models/user";
-import { GetServerSideProps } from "next";
-import * as UsersApi from "@/network/api/user";
-import * as BlogsApi from "@/network/api/blog";
-import { useState } from "react";
-import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
-import Head from "next/head";
-import { Col, Form, Row, Spinner } from "react-bootstrap";
-import styles from "@/styles/UserProfilePage.module.css";
-import ProfileImage from "@/components/ProfileImage";
-import { formatDate, handleError } from "@/utils/utils";
-import * as yup from "yup";
-import { useForm } from "react-hook-form";
-import FormInputField from "@/components/form/FormInputField";
-import LoadingButton from "@/components/LoadingButton";
-import useSWR from "swr";
 import BlogPostsGrid from "@/components/BlogPostsGrid";
-import { NotFoundError } from "@/network/http-errors";
+import LoadingButton from "@/components/LoadingButton";
 import PaginationBar from "@/components/PaginationBar";
+import ProfileImage from "@/components/ProfileImage";
+import FormInputField from "@/components/form/FormInputField";
+import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
+import { User } from "@/models/user";
+import * as BlogsApi from "@/network/api/blog";
+import * as UsersApi from "@/network/api/user";
+import { NotFoundError } from "@/network/http-errors";
+import styles from "@/styles/UserProfilePage.module.css";
+import { formatDate, handleError } from "@/utils/utils";
+import { GetServerSideProps } from "next";
+import Head from "next/head";
+import { useState } from "react";
+import { Col, Form, Row, Spinner } from "react-bootstrap";
+import { useForm } from "react-hook-form";
+import useSWR from "swr";
+import * as yup from "yup";
 
 export const getServerSideProps: GetServerSideProps<
   UserProfilePageProps

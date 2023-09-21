@@ -1,5 +1,5 @@
-import Image, { ImageProps } from "next/image";
 import profilePicPlaceholder from "@/assets/images/profile-pic-placeholder.png";
+import Image, { ImageProps } from "next/image";
 
 interface ProfileImageProps {
   src?: string;

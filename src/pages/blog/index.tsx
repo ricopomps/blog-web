@@ -1,6 +1,6 @@
 import BlogPostsGrid from "@/components/BlogPostsGrid";
 import PaginationBar from "@/components/PaginationBar";
-import { BlogPost, BlogPostPage } from "@/models/blogPost";
+import { BlogPostPage } from "@/models/blogPost";
 import * as BlogApi from "@/network/api/blog";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
