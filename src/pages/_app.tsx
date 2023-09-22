@@ -9,7 +9,6 @@ import type { AppProps } from "next/app";
 import { Raleway } from "next/font/google";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import NextNProgress from "nextjs-progressbar";
 import { useEffect } from "react";
 import { Container, SSRProvider } from "react-bootstrap";
 import { ToastContainer } from "react-toastify";
@@ -39,7 +38,6 @@ export default function App({ Component, pageProps }: AppProps) {
       <SSRProvider>
         <AuthModalsProvider>
           <div className={raleway.className}>
-            <NextNProgress color="#21fa90" />
             <NavBar />
             <main>
               <Container className={styles.pageContainer}>

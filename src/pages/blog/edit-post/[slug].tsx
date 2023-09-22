@@ -3,7 +3,6 @@ import LoadingButton from "@/components/LoadingButton";
 import FormInputField from "@/components/form/FormInputField";
 import MarkDownEditor from "@/components/form/MarkdownEditor";
 import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
-import useUnsavedChangesWarning from "@/hooks/useUnsavedChangesWarning";
 import { BlogPost } from "@/models/blogPost";
 import * as BlogApi from "@/network/api/blog";
 import { NotFoundError } from "@/network/http-errors";
@@ -93,8 +92,6 @@ export default function EditBlogPostPage({ post }: EditBlogPostPageProps) {
       setDeletePending(false);
     }
   }
-
-  useUnsavedChangesWarning(isDirty && !isSubmitting && !deletePending);
 
   async function onSubmit({
     title,

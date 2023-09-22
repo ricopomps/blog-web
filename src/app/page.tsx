@@ -1,7 +1,7 @@
-import styles from "@/styles/Home.module.css";
+import logo from "@/assets/images/logo.png";
+import { Col, Row } from "@/components/bootstrap";
 import Image from "next/image";
-import { Col, Row } from "react-bootstrap";
-import logo from "../assets/images/logo.png";
+import styles from "./Home.module.css";
 
 export default function Home() {
   return (

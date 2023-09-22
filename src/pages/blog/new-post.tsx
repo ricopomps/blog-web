@@ -2,7 +2,6 @@ import LoadingButton from "@/components/LoadingButton";
 import FormInputField from "@/components/form/FormInputField";
 import MarkDownEditor from "@/components/form/MarkdownEditor";
 import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
-import useUnsavedChangesWarning from "@/hooks/useUnsavedChangesWarning";
 import * as BlogApi from "@/network/api/blog";
 import { generateSlug, handleError } from "@/utils/utils";
 import {
@@ -68,8 +67,6 @@ export default function CreateBlogPostPage() {
     const slug = generateSlug(getValues("title"));
     setValue("slug", slug, { shouldValidate: true });
   }
-
-  useUnsavedChangesWarning(isDirty && !isSubmitting);
 
   if (userLoading)
     return <Spinner animation="border" className="d-block m-auto" />;
