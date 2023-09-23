@@ -1,3 +1,5 @@
+"use client";
+
 import ConfirmationModal from "@/components/ConfirmationModal";
 import LoadingButton from "@/components/LoadingButton";
 import FormInputField from "@/components/form/FormInputField";
@@ -5,35 +7,15 @@ import MarkDownEditor from "@/components/form/MarkdownEditor";
 import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
 import { BlogPost } from "@/models/blogPost";
 import * as BlogApi from "@/network/api/blog";
-import { NotFoundError } from "@/network/http-errors";
 import { generateSlug, handleError } from "@/utils/utils";
 import { requiredStringSchema, slugSchema } from "@/utils/validation";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { GetServerSideProps } from "next";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button, Form, Spinner } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import * as yup from "yup";
-
-export const getServerSideProps: GetServerSideProps<
-  EditBlogPostPageProps
-> = async ({ params }) => {
-  try {
-    const slug = params?.slug?.toString();
-    if (!slug) throw Error("Slug missing");
-
-    const post = await BlogApi.getBlogPostBySlug(slug);
-    return { props: { post } };
-  } catch (error) {
-    if (error instanceof NotFoundError) {
-      return { notFound: true };
-    } else {
-      throw error;
-    }
-  }
-};
 
 interface EditBlogPostPageProps {
   post: BlogPost;
@@ -53,6 +35,8 @@ export default function EditBlogPostPage({ post }: EditBlogPostPageProps) {
   const { user, userLoading } = useAuthenticatedUser();
   const router = useRouter();
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [showDeleteConfirmationDialog, setShowDeleteConfirmationDialog] =
     useState(false);
   const [deletePending, setDeletePending] = useState(false);
@@ -63,7 +47,7 @@ export default function EditBlogPostPage({ post }: EditBlogPostPageProps) {
     setValue,
     getValues,
     watch,
-    formState: { errors, isSubmitting, isDirty },
+    formState: { errors },
   } = useForm<EditPostFormData>({
     resolver: yupResolver(validationSchema),
     defaultValues: {
@@ -100,6 +84,7 @@ export default function EditBlogPostPage({ post }: EditBlogPostPageProps) {
     body,
     featuredImage,
   }: EditPostFormData) {
+    setIsSubmitting(true);
     try {
       await BlogApi.updateBlogPost(post._id, {
         title,
@@ -108,8 +93,9 @@ export default function EditBlogPostPage({ post }: EditBlogPostPageProps) {
         body,
         featuredImage: featuredImage?.item(0) || undefined,
       });
-      await router.push(`/blog/${slug}`);
+      router.push(`/blog/${slug}`);
     } catch (error) {
+      setIsSubmitting(false);
       handleError(error);
     }
   }

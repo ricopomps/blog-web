@@ -1,3 +1,5 @@
+"use client";
+
 import LoadingButton from "@/components/LoadingButton";
 import FormInputField from "@/components/form/FormInputField";
 import MarkDownEditor from "@/components/form/MarkdownEditor";
@@ -10,7 +12,8 @@ import {
   slugSchema,
 } from "@/utils/validation";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { Form, Spinner } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -29,13 +32,16 @@ type CreatePostFormData = InferType<typeof validationSchema>;
 export default function CreateBlogPostPage() {
   const { user, userLoading } = useAuthenticatedUser();
   const router = useRouter();
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const {
     register,
     handleSubmit,
     setValue,
     watch,
     getValues,
-    formState: { errors, isSubmitting, isDirty },
+    formState: { errors },
   } = useForm<CreatePostFormData>({
     resolver: yupResolver(validationSchema),
   });
@@ -47,6 +53,7 @@ export default function CreateBlogPostPage() {
     featuredImage,
     body,
   }: CreatePostFormData) {
+    setIsSubmitting(true);
     try {
       await BlogApi.createBlogPost({
         title,
@@ -56,8 +63,9 @@ export default function CreateBlogPostPage() {
         body,
       });
       toast.success("Blog created successfully");
-      await router.push(`/blog/${slug}`);
+      router.push(`/blog/${slug}`);
     } catch (error) {
+      setIsSubmitting(false);
       handleError(error);
     }
   }
