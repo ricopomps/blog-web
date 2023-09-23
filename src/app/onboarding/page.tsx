@@ -1,4 +1,4 @@
-"use client;";
+"use client";
 
 import LoadingButton from "@/components/LoadingButton";
 import FormInputField from "@/components/form/FormInputField";
