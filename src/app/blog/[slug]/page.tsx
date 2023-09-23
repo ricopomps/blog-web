@@ -1,6 +1,6 @@
-import Markdown from "@/components/Markdown";
 import UserProfileLink from "@/components/UserProfileLink";
 import BlogCommentSection from "@/components/comments/BlogCommentSection";
+import Markdown from "@/components/markdown/Markdown";
 import * as BlogApi from "@/network/api/blog";
 import { NotFoundError } from "@/network/http-errors";
 import { formatDate } from "@/utils/utils";

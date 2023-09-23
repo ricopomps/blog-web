@@ -1,3 +1,4 @@
+import { AuthModalsContext } from "@/app/AuthModalsProvider";
 import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
 import { Comment as CommentModel } from "@/models/comment";
 import * as CommentApi from "@/network/api/comment";
@@ -6,7 +7,6 @@ import { formatRelativeDate, handleError } from "@/utils/utils";
 import { useContext, useState } from "react";
 import { Button } from "react-bootstrap";
 import UserProfileLink from "../UserProfileLink";
-import { AuthModalsContext } from "../auth/AuthModalsProvider";
 import CreateCommentBox from "./CreateCommentBox";
 import EditCommentBox from "./EditCommentBox";
 

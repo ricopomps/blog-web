@@ -1,3 +1,5 @@
+"use client;";
+
 import LoadingButton from "@/components/LoadingButton";
 import FormInputField from "@/components/form/FormInputField";
 import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
@@ -5,7 +7,7 @@ import * as UsersApi from "@/network/api/user";
 import { handleError } from "@/utils/utils";
 import { usernameSchema } from "@/utils/validation";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useRouter } from "next/router";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
@@ -19,6 +21,7 @@ type OnBoardingInput = yup.InferType<typeof validationSchema>;
 export default function OnboardingPage() {
   const { user, mutateUser } = useAuthenticatedUser();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const {
     register,
@@ -42,10 +45,10 @@ export default function OnboardingPage() {
 
   useEffect(() => {
     if (user?.username) {
-      const returnTo = router.query.returnTo?.toString();
+      const returnTo = decodeURIComponent(searchParams?.get("returnTo") || "");
       router.push(returnTo || "/");
     }
-  }, [user, router]);
+  }, [user, router, searchParams]);
 
   return (
     <div>

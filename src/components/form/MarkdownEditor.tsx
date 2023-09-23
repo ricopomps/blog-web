@@ -8,7 +8,7 @@ import {
   UseFormSetValue,
   UseFormWatch,
 } from "react-hook-form";
-import Markdown from "../Markdown";
+import Markdown from "../markdown/Markdown";
 
 const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
   ssr: false,

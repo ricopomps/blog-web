@@ -6,7 +6,7 @@ import { stringify } from "querystring";
 import BlogPaginationBar from "./BlogPaginationBar";
 
 // This page is automatically dynamically rendered because we use searchParams
-// export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Articles - Blog",

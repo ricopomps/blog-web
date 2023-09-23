@@ -1,3 +1,4 @@
+import { AuthModalsContext } from "@/app/AuthModalsProvider";
 import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
 import { Comment } from "@/models/comment";
 import * as CommentApi from "@/network/api/comment";
@@ -8,7 +9,6 @@ import { Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import LoadingButton from "../LoadingButton";
-import { AuthModalsContext } from "../auth/AuthModalsProvider";
 import FormInputField from "../form/FormInputField";
 
 const validationSchema = yup.object({
