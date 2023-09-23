@@ -2,6 +2,7 @@ import OnBoardingRedirect from "@/components/OnBoardingRedirect";
 import { Container } from "@/components/bootstrap";
 import { Metadata } from "next";
 import { Suspense } from "react";
+import { ToastContainer } from "react-toastify";
 import AuthModalsProvider from "./AuthModalsProvider";
 import Footer from "./Footer/Footer";
 import NavBar from "./NavBar/NavBar";
@@ -34,6 +35,7 @@ export default function RootLayout({
             <OnBoardingRedirect />
           </Suspense>
         </AuthModalsProvider>
+        <ToastContainer />
       </body>
     </html>
   );
