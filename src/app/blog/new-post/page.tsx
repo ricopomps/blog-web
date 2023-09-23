@@ -4,6 +4,7 @@ import LoadingButton from "@/components/LoadingButton";
 import FormInputField from "@/components/form/FormInputField";
 import MarkDownEditor from "@/components/form/MarkdownEditor";
 import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
+import useAutoSave from "@/hooks/useAutoSave";
 import * as BlogApi from "@/network/api/blog";
 import { generateSlug, handleError } from "@/utils/utils";
 import {
@@ -13,7 +14,7 @@ import {
 } from "@/utils/validation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form, Spinner } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -40,11 +41,22 @@ export default function CreateBlogPostPage() {
     handleSubmit,
     setValue,
     watch,
+    reset,
     getValues,
     formState: { errors },
   } = useForm<CreatePostFormData>({
     resolver: yupResolver(validationSchema),
   });
+
+  const { getValue: getAutoSavedValue, clearValue: clearAutoSavedValue } =
+    useAutoSave("new-post-input", { ...watch(), featuredImage: undefined });
+
+  useEffect(() => {
+    const autoSavedValue = getAutoSavedValue();
+    if (autoSavedValue) {
+      reset(autoSavedValue);
+    }
+  }, [getAutoSavedValue, reset]);
 
   async function onSubmit({
     title,
@@ -62,6 +74,7 @@ export default function CreateBlogPostPage() {
         featuredImage: featuredImage[0],
         body,
       });
+      clearAutoSavedValue();
       toast.success("Blog created successfully");
       router.push(`/blog/${slug}`);
     } catch (error) {

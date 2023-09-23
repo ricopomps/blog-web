@@ -53,3 +53,7 @@ export function handleError(error: unknown) {
     toast.error("An error occurred.");
   }
 }
+
+export function isServer() {
+  return typeof window === "undefined";
+}

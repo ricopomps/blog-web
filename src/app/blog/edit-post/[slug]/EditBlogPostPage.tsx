@@ -5,13 +5,14 @@ import LoadingButton from "@/components/LoadingButton";
 import FormInputField from "@/components/form/FormInputField";
 import MarkDownEditor from "@/components/form/MarkdownEditor";
 import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
+import useAutoSave from "@/hooks/useAutoSave";
 import { BlogPost } from "@/models/blogPost";
 import * as BlogApi from "@/network/api/blog";
 import { generateSlug, handleError } from "@/utils/utils";
 import { requiredStringSchema, slugSchema } from "@/utils/validation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Form, Spinner } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -47,6 +48,7 @@ export default function EditBlogPostPage({ post }: EditBlogPostPageProps) {
     setValue,
     getValues,
     watch,
+    reset,
     formState: { errors },
   } = useForm<EditPostFormData>({
     resolver: yupResolver(validationSchema),
@@ -57,6 +59,19 @@ export default function EditBlogPostPage({ post }: EditBlogPostPageProps) {
       body: post.body,
     },
   });
+
+  const { getValue: getAutoSavedValue, clearValue: clearAutoSavedValue } =
+    useAutoSave(`edit-post-input-${post._id}`, {
+      ...watch(),
+      featuredImage: undefined,
+    });
+
+  useEffect(() => {
+    const autoSavedValue = getAutoSavedValue();
+    if (autoSavedValue) {
+      reset(autoSavedValue);
+    }
+  }, [getAutoSavedValue, reset]);
 
   function generateSlugFromTitle() {
     if (getValues("slug") || !getValues("title")) return;
@@ -94,6 +109,7 @@ export default function EditBlogPostPage({ post }: EditBlogPostPageProps) {
         body,
         featuredImage: featuredImage?.item(0) || undefined,
       });
+      clearAutoSavedValue();
       router.refresh();
       router.push(`/blog/${slug}`);
     } catch (error) {
