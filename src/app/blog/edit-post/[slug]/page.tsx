@@ -6,6 +6,8 @@ import EditBlogPostPage from "./EditBlogPostPage";
 
 // This page is automatically dynamically rendered because it has a dynamic URL param but no generateStaticParams
 
+//export const revalidate = 60 * 60 //1h //how to revalidate based on time
+
 interface PageProps {
   params: { slug: string };
 }

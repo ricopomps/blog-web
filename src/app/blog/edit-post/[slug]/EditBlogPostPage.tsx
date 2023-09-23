@@ -69,6 +69,7 @@ export default function EditBlogPostPage({ post }: EditBlogPostPageProps) {
     setDeletePending(true);
     try {
       await BlogApi.deleteBlogPost(post._id);
+      router.refresh();
       router.push("/blog");
       toast.success("Post deleted successfully");
     } catch (error) {
@@ -93,6 +94,7 @@ export default function EditBlogPostPage({ post }: EditBlogPostPageProps) {
         body,
         featuredImage: featuredImage?.item(0) || undefined,
       });
+      router.refresh();
       router.push(`/blog/${slug}`);
     } catch (error) {
       setIsSubmitting(false);

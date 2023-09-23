@@ -5,10 +5,10 @@ import * as BlogApi from "@/network/api/blog";
 import { NotFoundError } from "@/network/http-errors";
 import { formatDate } from "@/utils/utils";
 import { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { cache } from "react";
 import styles from "./BlogPostPage.module.css";
 import EditPostButton from "./EditPostButton";
 
@@ -18,17 +18,22 @@ interface BlogPostPageProps {
   params: { slug: string };
 }
 
-const getPost = cache(async function (slug: string) {
-  try {
-    return await BlogApi.getBlogPostBySlug(slug);
-  } catch (error) {
-    if (error instanceof NotFoundError) {
-      notFound();
-    } else {
-      throw error;
-    }
-  }
-});
+const getPost = (slug: string) =>
+  unstable_cache(
+    async function (slug: string) {
+      try {
+        return await BlogApi.getBlogPostBySlug(slug);
+      } catch (error) {
+        if (error instanceof NotFoundError) {
+          notFound();
+        } else {
+          throw error;
+        }
+      }
+    },
+    [slug],
+    { tags: [slug] }
+  )(slug);
 
 export async function generateMetadata({
   params: { slug },
