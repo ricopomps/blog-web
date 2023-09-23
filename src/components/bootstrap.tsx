@@ -1,3 +1,17 @@
 "use client";
 
-export { Col, Container, Row, Spinner } from "react-bootstrap";
+import { Card } from "react-bootstrap";
+
+export const CardBody = Card.Body;
+export const CardTitle = Card.Title;
+export const CardText = Card.Text;
+
+export {
+  Card,
+  Col,
+  Container,
+  OverlayTrigger,
+  Row,
+  Spinner,
+  Tooltip,
+} from "react-bootstrap";

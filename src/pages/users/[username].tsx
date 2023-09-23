@@ -1,7 +1,7 @@
-import BlogPostsGrid from "@/components/BlogPostsGrid";
 import LoadingButton from "@/components/LoadingButton";
 import PaginationBar from "@/components/PaginationBar";
 import ProfileImage from "@/components/ProfileImage";
+import BlogPostsGrid from "@/components/blog/BlogPostsGrid";
 import FormInputField from "@/components/form/FormInputField";
 import useAuthenticatedUser from "@/hooks/useAuthenticatedUser";
 import { User } from "@/models/user";

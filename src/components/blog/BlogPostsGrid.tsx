@@ -1,7 +1,7 @@
+import { Col, Row } from "@/components/bootstrap";
 import { BlogPost } from "@/models/blogPost";
-import styles from "@/styles/BlogPostsGrid.module.css";
-import { Col, Row } from "react-bootstrap";
 import BlogPostEntry from "./BlogPostEntry";
+import styles from "./BlogPostsGrid.module.css";
 interface BlogPostsGridProps {
   posts: BlogPost[];
 }

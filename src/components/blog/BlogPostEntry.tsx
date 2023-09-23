@@ -1,14 +1,15 @@
+import { Card, CardBody, CardText, CardTitle } from "@/components/bootstrap";
 import { BlogPost } from "@/models/blogPost";
 import { formatDate } from "@/utils/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { Card } from "react-bootstrap";
-import UserProfileLink from "./UserProfileLink";
+import UserProfileLink from "../UserProfileLink";
 
 interface BlogPostEntryProps {
   post: BlogPost;
   className?: string;
 }
+
 export default function BlogPostEntry({
   post: { slug, title, featuredImageUrl, body, author, summary, createdAt },
   className,
@@ -27,18 +28,18 @@ export default function BlogPostEntry({
             className="card-img-top object-fit-cover"
           ></Image>
         </Link>
-        <Card.Body>
-          <Card.Title>
+        <CardBody>
+          <CardTitle>
             <Link href={postLink}>{title}</Link>
-          </Card.Title>
-          <Card.Text>{summary}</Card.Text>
-          <Card.Text>
+          </CardTitle>
+          <CardText>{summary}</CardText>
+          <CardText>
             <UserProfileLink user={author} />
-          </Card.Text>
-          <Card.Text className="text-muted small">
+          </CardText>
+          <CardText className="text-muted small">
             <time dateTime={createdAt}>{formatDate(createdAt)}</time>
-          </Card.Text>
-        </Card.Body>
+          </CardText>
+        </CardBody>
       </article>
     </Card>
   );

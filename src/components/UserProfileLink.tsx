@@ -1,7 +1,7 @@
+import { OverlayTrigger, Tooltip } from "@/components/bootstrap";
 import { User } from "@/models/user";
 import { formatDate } from "@/utils/utils";
 import Link from "next/link";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import ProfileImage from "./ProfileImage";
 
 interface UserProfileLinkProps {

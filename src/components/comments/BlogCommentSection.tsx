@@ -1,3 +1,5 @@
+"use client";
+
 import { Comment as CommentModel } from "@/models/comment";
 import * as CommentApi from "@/network/api/comment";
 import { handleError } from "@/utils/utils";
